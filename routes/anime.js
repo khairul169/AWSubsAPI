@@ -2,6 +2,38 @@ const axios = require('axios').default;
 const cheerio = require('cheerio');
 const consts = require('../consts');
 
+const onAnimeList = (body) => {
+    let $ = cheerio.load(body);
+
+    const items = [];
+
+    $('.series').map((index, element) => {
+        const item = $(element);
+
+        const title = item.text();
+        const url = item.attr('href');
+        const id = url.split('/')[4];
+
+        items.push({ id, title, url });
+    });
+
+    return items;
+}
+
+const getAnimeList = async (anime) => {
+    try {
+        let url = 'https://awsubs.tv/anime/?list';
+        let response = await axios.get(url);
+
+        return {
+            status: 0,
+            result: onAnimeList(response.data)
+        };
+    } catch (e) {
+        return e.response && e.response.status === 404 ? consts.ERROR_404 : consts.ERROR_UNEXPECTED;
+    }
+}
+
 const parseAnimeInfo = (name, value, info) => {
     switch (name) {
         case 'Japanese':
@@ -75,4 +107,7 @@ const getAnime = async (anime) => {
     }
 }
 
-module.exports = getAnime;
+module.exports = {
+    getAnimeList,
+    getAnime
+};

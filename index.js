@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 const getLatest = require('./routes/latest');
-const getAnime = require('./routes/anime');
+const anime = require('./routes/anime');
 const getRelease = require('./routes/release');
 
 app.get('/', async (req, res) => {
@@ -15,8 +15,13 @@ app.get('/page/:page', async (req, res) => {
   res.json(items);
 });
 
+app.get('/anime/', async (req, res) => {
+  const list = await anime.getAnimeList();
+  res.json(list);
+});
+
 app.get('/anime/:anime', async (req, res) => {
-  const anime = await getAnime(req.params.anime);
+  const anime = await anime.getAnime(req.params.anime);
   res.json(anime);
 });
 

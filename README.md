@@ -19,6 +19,10 @@ Return recent anime update a.k.a first page posts
 Return paged anime releases  
 Example: `/page/1`
 
+- **[GET]** `/anime/`
+
+Return anime list
+
 - **[GET]** `/anime/{id}`
 
 Return list of anime episodes  
