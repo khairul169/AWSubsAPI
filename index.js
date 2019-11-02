@@ -22,8 +22,8 @@ app.get('/anime/', async (req, res) => {
 });
 
 app.get('/anime/:anime', async (req, res) => {
-  const anime = await anime.getAnime(req.params.anime);
-  res.json(anime);
+  const info = await anime.getAnime(req.params.anime);
+  res.json(info);
 });
 
 app.get('/release/:id', async (req, res) => {
