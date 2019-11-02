@@ -38,8 +38,12 @@ const onLoaded = (body) => {
 }
 
 const getRelease = async (id) => {
-  let response = await axios.get('https://awsubs.tv/' + id + '/');
-  return onLoaded(response.data);
+  try {
+    let response = await axios.get('https://awsubs.tv/' + id + '/');
+    return onLoaded(response.data);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 module.exports = getRelease;
