@@ -42,7 +42,11 @@ const getLatest = async (page) => {
     try {
         let url = 'https://awsubs.tv/' + (page ? `page/${page}/` : '');
         let response = await axios.get(url);
-        return onLoaded(response.data);
+
+        return {
+            status: 0,
+            result: onLoaded(response.data)
+        };
     } catch (e) {
         return e.response && e.response.status === 404 ? consts.ERROR_404 : consts.ERROR_UNEXPECTED;
     }

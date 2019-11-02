@@ -57,7 +57,11 @@ const onLoaded = (body) => {
 const getRelease = async (id) => {
   try {
     let response = await axios.get('https://awsubs.tv/' + id + '/');
-    return onLoaded(response.data);
+
+    return {
+      status: 0,
+      result: onLoaded(response.data)
+    };
   } catch (e) {
     return e.response && e.response.status === 404 ? consts.ERROR_404 : consts.ERROR_UNEXPECTED;
   }
