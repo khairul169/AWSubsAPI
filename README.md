@@ -10,21 +10,25 @@ Default port: **8080**
 
 ## URIs
 
-- `/`
+- **[GET]** `/`
 
 Return recent anime update a.k.a first page posts
 
-- `/page/{id}`
+- **[GET]** `/page/{id}`
 
 Return paged anime releases  
 Example: `/page/1`
 
-- `/anime/{id}`
+- **[GET]** `/anime/{id}`
 
 Return list of anime episodes  
 Example: `/anime/dr-stone`
 
-- `/release/{id}`
+- **[GET]** `/release/{id}`
 
 Return anime episode data and links  
 Example: `/release/dr-stone-episode-18-subtitle-indonesia`
+
+## Example API Server
+
+**[GET]** `https://awsubs-api.khairul.my.id/`
