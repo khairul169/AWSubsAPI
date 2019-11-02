@@ -1,5 +1,6 @@
 const axios = require('axios').default;
 const cheerio = require('cheerio');
+const consts = require('../consts');
 
 const parseAuthor = (string) => {
     let author = string.match(/oleh(.*)/im)[1].trim();
@@ -40,11 +41,10 @@ const onLoaded = (body) => {
 const getLatest = async (page) => {
     try {
         let url = 'https://awsubs.tv/' + (page ? `page/${page}/` : '');
-
         let response = await axios.get(url);
         return onLoaded(response.data);
     } catch (e) {
-        console.log(e);
+        return e.response && e.response.status === 404 ? consts.ERROR_404 : consts.ERROR_UNEXPECTED;
     }
 }
 
