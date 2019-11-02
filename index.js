@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const config = require('./config');
 
 const getLatest = require('./routes/latest');
 const anime = require('./routes/anime');
@@ -30,6 +31,6 @@ app.get('/release/:id', async (req, res) => {
   res.json(data);
 });
 
-const server = app.listen(8080, () => {
+const server = app.listen(config.PORT, () => {
   console.log('Server started.');
 });
