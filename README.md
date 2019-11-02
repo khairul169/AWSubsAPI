@@ -1,0 +1,2 @@
+# AWSubsAPI
+Unofficial AWSubs API
