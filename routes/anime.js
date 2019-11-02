@@ -7,7 +7,7 @@ const onAnimeList = (body) => {
 
     const items = [];
 
-    $('.series').map((index, element) => {
+    $('.soralist .series').map((index, element) => {
         const item = $(element);
 
         const title = item.text();
