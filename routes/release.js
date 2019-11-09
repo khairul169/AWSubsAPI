@@ -1,6 +1,7 @@
 const axios = require('axios').default;
 const cheerio = require('cheerio');
 const consts = require('../consts');
+const state = require('../state');
 
 const parseAuthor = (string) => {
   let author = string.match(/oleh(.*)rilis/im)[1].trim();
@@ -39,7 +40,9 @@ const onLoaded = (body) => {
 
       e.find('a').map((index, elem) => {
         const item = $(elem);
-        links.push({ name: item.text(), url: item.attr('href') });
+        const url = item.attr('href');
+        const encodedUrl = Buffer.from(url).toString('base64');
+        links.push({ name: item.text(), url, download: state.address + 'get/' + encodedUrl });
       });
 
       uploads.push({ name: linkItemTitle, links });

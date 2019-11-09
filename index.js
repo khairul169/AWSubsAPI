@@ -2,12 +2,20 @@ const express = require('express');
 const app = express();
 const config = require('./config');
 const cacheMiddleware = require('./cache-middleware');
+const state = require('./state');
 
 const getLatest = require('./routes/latest');
 const anime = require('./routes/anime');
 const getRelease = require('./routes/release');
 
+const leechAwsubs = require('./leecher/short-awsubs');
+
 app.all('*', cacheMiddleware);
+
+app.all('*', (req, res, next) => {
+  state.address = req.protocol + '://' + req.get('host') + '/';
+  next();
+});
 
 app.get('/', async (req, res) => {
   const items = await getLatest();
@@ -34,6 +42,13 @@ app.get('/release/:id', async (req, res) => {
   res.json(data);
 });
 
+app.get('/get/:url', async (req, res) => {
+  const url = Buffer.from(req.params.url, 'base64').toString('ascii');
+  const result = await leechAwsubs.tryLeech(url);
+  res.redirect(result);
+});
+
 const server = app.listen(config.PORT, () => {
-  console.log('Server started.');
+  const address = server.address();
+  console.log('Server started.', address);
 });
