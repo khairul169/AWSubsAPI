@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
 const config = require('./config');
+const cacheMiddleware = require('./cache-middleware');
 
 const getLatest = require('./routes/latest');
 const anime = require('./routes/anime');
 const getRelease = require('./routes/release');
+
+app.all('*', cacheMiddleware);
 
 app.get('/', async (req, res) => {
   const items = await getLatest();
