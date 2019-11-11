@@ -1,55 +1,89 @@
-const axios = require('axios').default;
-const cheerio = require('cheerio');
-const consts = require('../consts');
+const axios = require("axios").default;
+const cheerio = require("cheerio");
+const consts = require("../consts");
 
-const parseAuthor = (string) => {
-    let author = string.match(/oleh(.*)/im)[1].trim();
-    return author;
-}
+const parseAuthor = string => {
+  let author = string.match(/oleh(.*)/im)[1].trim();
+  return author;
+};
 
-const parseDate = (string) => {
-    let date = string.match(/rilis(.*)oleh/im)[1].trim();
-    date = date.substr(0, date.length - 1);
-    return date;
-}
+const parseDate = string => {
+  let date = string.match(/rilis(.*)oleh/im)[1].trim();
+  date = date.substr(0, date.length - 1);
+  return date;
+};
 
-const onLoaded = (body) => {
-    let $ = cheerio.load(body);
-    let items = [];
+const onLoaded = body => {
+  let $ = cheerio.load(body);
 
-    $('.listupd').children().map((index, element) => {
-        let obj = $(element);
-        if (obj.hasClass('sticky')) {
-            return;
-        }
+  const featuredSeries = [];
+  const latestReleases = [];
 
-        const title = obj.find("h2 a").text();
-        const url = obj.find("h2 a").attr('href');
-        const image = obj.find("img").attr('src');
-        const id = url.split('/')[3];
+  $(".postbody .box .ldr")
+    .children(".outbx")
+    .map((index, element) => {
+      let obj = $(element);
 
-        const subtitle = $(obj.find('.dtl').children('span')[0]).text();
-        const author = parseAuthor(subtitle);
-        const date = parseDate(subtitle);
+      const name = obj.find(".rld h2").text();
+      let seriesId = obj
+        .find(".rld a")
+        .attr("href")
+        .split("/");
+      seriesId = seriesId[seriesId.length - 2];
+      const image = obj.find("img").attr("src");
 
-        items.push({ id, title, image, author, date, url });
+      featuredSeries.push({ name, id: seriesId, image });
     });
 
-    return items;
-}
+  $(".listupd")
+    .children()
+    .map((index, element) => {
+      let obj = $(element);
+      if (obj.hasClass("sticky")) {
+        return;
+      }
 
-const getLatest = async (page) => {
-    try {
-        let url = 'https://awsubs.tv/' + (page ? `page/${page}/` : '');
-        let response = await axios.get(url);
+      const title = obj.find("h2 a").text();
+      const url = obj.find("h2 a").attr("href");
+      const image = obj.find("img").attr("src");
+      const id = url.split("/")[3];
 
-        return {
-            status: 0,
-            result: onLoaded(response.data)
-        };
-    } catch (e) {
-        return e.response && e.response.status === 404 ? consts.ERROR_404 : consts.ERROR_UNEXPECTED;
-    }
-}
+      const subtitle = $(obj.find(".dtl").children("span")[0]).text();
+      const author = parseAuthor(subtitle);
+      const date = parseDate(subtitle);
+
+      const seriesObj = $(obj.find(".dtl span").children("a"));
+      const seriesName = seriesObj.text();
+      let seriesId = seriesObj.attr("href").split("/");
+      seriesId = seriesId[seriesId.length - 1];
+      const series = {
+        name: seriesName,
+        id: seriesId
+      };
+
+      latestReleases.push({ id, title, image, author, date, url, series });
+    });
+
+  return {
+    featured: featuredSeries,
+    latest: latestReleases
+  };
+};
+
+const getLatest = async page => {
+  try {
+    let url = "https://awsubs.tv/" + (page ? `page/${page}/` : "");
+    let response = await axios.get(url);
+
+    return {
+      status: 0,
+      result: onLoaded(response.data)
+    };
+  } catch (e) {
+    return e.response && e.response.status === 404
+      ? consts.ERROR_404
+      : consts.ERROR_UNEXPECTED;
+  }
+};
 
 module.exports = getLatest;
