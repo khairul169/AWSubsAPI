@@ -18,9 +18,12 @@ const onLoaded = body => {
 
   const featuredSeries = [];
   const latestReleases = [];
+  const ongoingSeries = [];
 
-  $(".postbody .box .ldr")
-    .children(".outbx")
+  $(".postbody")
+    .children(".box")
+    .eq(0)
+    .find(".outbx")
     .map((index, element) => {
       let obj = $(element);
 
@@ -64,9 +67,28 @@ const onLoaded = body => {
       latestReleases.push({ id, title, image, author, date, url, series });
     });
 
+  $(".postbody")
+    .children(".box")
+    .eq(1)
+    .find(".outbx")
+    .map((index, element) => {
+      let obj = $(element);
+
+      const name = obj.find(".rld h2").text();
+      let seriesId = obj
+        .find(".rld a")
+        .attr("href")
+        .split("/");
+      seriesId = seriesId[seriesId.length - 2];
+      const image = obj.find("img").attr("src");
+
+      ongoingSeries.push({ name, id: seriesId, image });
+    });
+
   return {
     featured: featuredSeries,
-    latest: latestReleases
+    latest: latestReleases,
+    ongoing: ongoingSeries
   };
 };
 
