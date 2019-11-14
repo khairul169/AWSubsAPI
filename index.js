@@ -50,6 +50,19 @@ app.get("/genre/:genre/page/:page", async (req, res) => {
   res.json(info);
 });
 
+app.get("/search/:query", async (req, res) => {
+  const info = await anime.getAnimeList({ search: req.params.query });
+  res.json(info);
+});
+
+app.get("/search/:query/page/:page", async (req, res) => {
+  const info = await anime.getAnimeList({
+    search: req.params.query,
+    page: req.params.page
+  });
+  res.json(info);
+});
+
 app.get("/anime/:anime", async (req, res) => {
   const info = await anime.getAnime(req.params.anime);
   res.json(info);

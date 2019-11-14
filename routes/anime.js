@@ -30,7 +30,7 @@ const onAnimeList = body => {
   return items;
 };
 
-const getAnimeList = async ({ page, genre }) => {
+const getAnimeList = async ({ page, genre, search }) => {
   try {
     let url = "";
 
@@ -38,6 +38,9 @@ const getAnimeList = async ({ page, genre }) => {
       url =
         `https://awsubs.tv/genre-anime/${genre}/` +
         (page ? `page/${page}` : "");
+    } else if (search) {
+      url =
+        "https://awsubs.tv/" + (page ? `page/${page}/` : "") + "?s=" + search;
     } else {
       url = "https://awsubs.tv/anime/" + (page ? `page/${page}` : "");
     }
