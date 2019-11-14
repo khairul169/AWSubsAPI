@@ -1,6 +1,7 @@
 const axios = require("axios").default;
 const cheerio = require("cheerio");
 const consts = require("../consts");
+const utils = require("../utils");
 
 const onAnimeList = body => {
   let $ = cheerio.load(body);
@@ -11,7 +12,7 @@ const onAnimeList = body => {
     const item = $(element);
 
     const title = item.find("h2 a").text();
-    const image = item.find("img").attr("src");
+    const image = utils.stripWpUrl(item.find("img").attr("src"));
     const url = item.find("h2 a").attr("href");
     const id = url.split("/")[4];
     const type = item.find("a span").text();
@@ -93,7 +94,7 @@ const onLoaded = body => {
   let $ = cheerio.load(body);
 
   const title = $("article h1").text();
-  const image = $("article .imgprop img").attr("src");
+  const image = utils.stripWpUrl($("article .imgprop img").attr("src"));
   const info = {};
   const items = [];
 

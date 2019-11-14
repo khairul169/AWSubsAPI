@@ -1,6 +1,7 @@
 const axios = require("axios").default;
 const cheerio = require("cheerio");
 const consts = require("../consts");
+const utils = require("../utils");
 
 const parseAuthor = string => {
   let author = string.match(/oleh(.*)/im)[1].trim();
@@ -48,7 +49,7 @@ const onLoaded = body => {
 
       const title = obj.find("h2 a").text();
       const url = obj.find("h2 a").attr("href");
-      const image = obj.find("img").attr("src");
+      const image = utils.stripWpUrl(obj.find("img").attr("src"));
       const id = url.split("/")[3];
 
       const subtitle = $(obj.find(".dtl").children("span")[0]).text();
