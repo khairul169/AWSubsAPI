@@ -1,8 +1,10 @@
 # AWSubsAPI
+
 Unofficial AWSubs Scrapper with REST API using ExpressJS and Cheerio  
 Default port: **8080**
 
 ## Tech Used
+
 - NodeJS
 - ExpressJS
 - Axios
@@ -32,7 +34,3 @@ Example: `/anime/dr-stone`
 
 Return anime episode data and links  
 Example: `/release/dr-stone-episode-18-subtitle-indonesia`
-
-## Example API Server
-
-**[GET]** `https://awsubs-api.khairul.my.id/`
